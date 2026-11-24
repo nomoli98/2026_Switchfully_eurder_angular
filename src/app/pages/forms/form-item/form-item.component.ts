@@ -1,16 +1,9 @@
-import { Component, computed, input, linkedSignal, signal } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { disabled, form, FormField, maxLength, min, required } from '@angular/forms/signals';
 import { Observable } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ItemInterface } from '../../../core/interfaces/item.interface';
 import { StockUrgencyEnum } from '../../../core/enums/stock-urgency.enum';
-
-export interface Product {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-}
 
 @Component({
   imports: [FormField, RouterLink],
@@ -19,9 +12,11 @@ export interface Product {
 })
 export class FormItemComponent {
   editable = input.required<boolean>();
-  method = input<(item: ItemInterface) => Observable<unknown>>();
+  method = input<(item: ItemInterface) => Observable<ItemInterface>>();
   methodName = input<'update' | 'create'>();
   item = input<ItemInterface>();
+
+  private readonly router = inject(Router);
 
   private readonly initial: ItemInterface = {
     id: '',
@@ -62,14 +57,23 @@ export class FormItemComponent {
 
     this.isLoading.set(true);
     saveProduct(this.product()).subscribe({
-      next: () => {
+      next: (saved) => {
         this.isLoading.set(false);
         this.resetErrors();
+        // create: saved.id is the new item's id; update: same id as before
+        const id = saved?.id || this.item()?.id;
+        this.router.navigate(id ? ['/items', id] : ['/items']);
       },
       error: () => {
         this.isLoading.set(false);
       },
     });
+  }
+
+  protected cancel() {
+    this.resetErrors();
+    const id = this.item()?.id;
+    this.router.navigate(this.methodName() === 'update' && id ? ['/items', id] : ['/items']);
   }
 
   protected resetErrors() {

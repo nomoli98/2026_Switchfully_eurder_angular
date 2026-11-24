@@ -5,9 +5,6 @@ export interface EurderResponseDto {
     postalCode: string;
     streetName: string;
   };
-  itemGroups: [
-    { itemId: string; orderedAmount: number },
-    { itemId: string; orderedAmount: number },
-  ];
+  itemGroups: { itemId: string; orderedAmount: number }[];
   orderId: string;
 }

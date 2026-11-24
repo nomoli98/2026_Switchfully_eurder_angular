@@ -4,6 +4,8 @@ import { provideRouter, Router } from '@angular/router';
 import { HeaderComponent } from './header.component';
 import { BasketService } from '../../core/services/basket/basket.service';
 import { ThemeService } from '../../core/services/theme/theme.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { makeUser } from '../../../testing/fixtures';
 import { q, qa, text } from '../../../testing/fixtures';
 
 @Component({ template: '' })
@@ -31,6 +33,7 @@ describe('HeaderComponent', () => {
           { path: 'items/new', component: Dummy },
           { path: 'customers', component: Dummy },
           { path: 'basket', component: Dummy },
+          { path: 'login', component: Dummy },
         ]),
       ],
     });
@@ -113,5 +116,23 @@ describe('HeaderComponent', () => {
     expect(theme.theme()).toBe('dark');
     expect(toggle.getAttribute('aria-label')).toBe('Switch to light theme');
     expect(text(toggle)).toBe('Light theme');
+  });
+
+  it('shows a Log in link when logged out', () => {
+    expect(q<HTMLAnchorElement>(el, '[data-testid="login-link"]').getAttribute('href')).toBe('/login');
+    expect(el.querySelector('[data-testid="logout"]')).toBeNull();
+  });
+
+  it('shows the logged-in customer and logs out', async () => {
+    const auth = TestBed.inject(AuthService);
+    auth.login(makeUser());
+    await fixture.whenStable();
+    expect(text(q(el, '[data-testid="header-user"]'))).toBe('Ada Lovelace');
+    expect(el.querySelector('[data-testid="login-link"]')).toBeNull();
+
+    q<HTMLButtonElement>(el, '[data-testid="logout"]').click();
+    await fixture.whenStable();
+    expect(auth.isLoggedIn()).toBe(false);
+    expect(TestBed.inject(Router).url).toBe('/');
   });
 });

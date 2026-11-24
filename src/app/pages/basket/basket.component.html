@@ -16,10 +16,42 @@
   } @else {
     <app-basket-table [basket]="_basket()" />
 
+    @if (orderError()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert" data-testid="order-error">{{ orderError() }}</div>
+    }
+
     <div class="d-grid mt-3">
-      <!-- Placeholder (story ORBA2): placing the order comes with ORBA3 -->
-      <button type="button" class="btn btn-success btn-lg text-uppercase" disabled
-              title="Placing orders is not available yet">Place order</button>
+      <button type="button" class="btn btn-success btn-lg text-uppercase" data-testid="place-order"
+              [disabled]="isPlacing()" (click)="placeOrder()">
+        @if (isPlacing()) {
+          Placing order…
+        } @else if (authService.isLoggedIn()) {
+          Place order
+        } @else {
+          Log in to place order
+        }
+      </button>
     </div>
   }
 </div>
+
+@if (orderPlaced()) {
+  <div class="modal d-block" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="orderPlacedTitle"
+       data-testid="order-placed-dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-bg-success">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5 text-uppercase" id="orderPlacedTitle">Order placed</h2>
+          <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeDialog()"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+          Your order has been successfully placed.<br>Thank you
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-light" (click)="closeDialog()">Okidoki</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop show"></div>
+}

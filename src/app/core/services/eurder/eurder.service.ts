@@ -9,7 +9,7 @@ import { map, Observable } from 'rxjs';
 @Service()
 export class EurderService {
   private readonly _http = inject(HttpClient);
-  private readonly _url = 'http://localhost:9001/order';
+  private readonly _url = 'http://localhost:9001/orders';
 
   createEurder(request: EurderRequestDto): Observable<EurderInterface> {
     return this._http.post<EurderResponseDto>(this._url, request).pipe(map(EurderResToEntity));

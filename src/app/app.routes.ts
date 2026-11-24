@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/users/user.routes').then((r) => r.routes),
   },
   {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
     path: 'basket',
     loadComponent: () => import('./pages/basket/basket.component').then((m) => m.BasketComponent),
   },

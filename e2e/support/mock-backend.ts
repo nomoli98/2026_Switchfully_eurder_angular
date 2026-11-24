@@ -118,6 +118,15 @@ export class MockBackend {
         id: existingId ?? `cust-new-${this.nextId++}`,
       }));
     }
+    if (collection === 'orders' && method === 'POST' && !id) {
+      const customer = this.customers.get(body?.customerId);
+      if (!customer) return json(route, 400, { message: 'unknown customer' });
+      return json(route, 201, {
+        orderId: `order-${this.nextId++}`,
+        address: customer.address,
+        itemGroups: body.itemGroups,
+      });
+    }
     return json(route, 404, { message: 'not found' });
   }
 

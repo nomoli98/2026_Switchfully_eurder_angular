@@ -52,6 +52,17 @@
             </span>
           }
         </a>
+
+        @if (authService.user(); as user) {
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-body-secondary text-nowrap" data-testid="header-user">
+              {{ user.firstname }} {{ user.lastname }}
+            </span>
+            <button type="button" class="btn btn-outline-secondary" (click)="logout()" data-testid="logout">Log out</button>
+          </div>
+        } @else {
+          <a class="btn btn-outline-primary" routerLink="/login" routerLinkActive="active" data-testid="login-link">Log in</a>
+        }
       </div>
     </div>
   </div>

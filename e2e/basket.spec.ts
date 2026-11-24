@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { item, MockBackend } from './support/mock-backend';
+import { customer, item, MockBackend } from './support/mock-backend';
 
 test('add to basket, change amounts, remove, with total and badge', async ({ page }) => {
   await new MockBackend({
@@ -54,10 +54,57 @@ test('add to basket, change amounts, remove, with total and badge', async ({ pag
   await expect(badge).toHaveCount(0);
 });
 
-test('Place order is a disabled placeholder for now', async ({ page }) => {
-  await new MockBackend({ items: [item({ id: 'mug' })] }).install(page);
+test('place an order: log in from the basket, order, dialog, back to items', async ({ page }) => {
+  const backend = new MockBackend({
+    items: [item({ id: 'mug', name: 'mug' })],
+    customers: [customer({ id: 'ada' }), customer({ id: 'grace', firstname: 'Grace', lastname: 'Hopper' })],
+  });
+  await backend.install(page);
+
+  await page.goto('/items/mug');
+  await page.getByLabel('Amount').fill('3');
+  await page.getByRole('button', { name: 'Add to basket' }).click();
+  await page.getByRole('link', { name: 'View basket' }).click();
+
+  // logged out: the button sends you to the login page, which brings you back
+  await page.getByRole('button', { name: 'Log in to place order' }).click();
+  await expect(page).toHaveURL(/\/login\?returnUrl=%2Fbasket$/);
+  await page.getByLabel('Customer').selectOption({ label: 'Grace Hopper' });
+  await page.getByRole('button', { name: 'Log in' }).click();
+  await expect(page).toHaveURL(/\/basket$/);
+  await expect(page.getByTestId('header-user')).toHaveText('Grace Hopper');
+
+  await page.getByRole('button', { name: 'Place order' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Order placed' });
+  await expect(dialog).toContainText('Your order has been successfully placed.');
+  expect(backend.requestsTo('POST', '/orders')[0].body).toEqual({
+    customerId: 'grace',
+    itemGroups: [{ itemId: 'mug', orderedAmount: 3 }],
+  });
+  await expect(page.getByTestId('basket-badge')).toHaveCount(0);
+
+  await dialog.getByRole('button', { name: 'Okidoki' }).click();
+  await expect(page).toHaveURL(/\/items$/);
+
+  // the login survives a refresh, and logging out works
+  await page.reload();
+  await expect(page.getByTestId('header-user')).toHaveText('Grace Hopper');
+  await page.getByTestId('logout').click();
+  await expect(page.getByTestId('login-link')).toBeVisible();
+});
+
+test('a failed order keeps the basket and tells the user', async ({ page }) => {
+  const backend = new MockBackend({ items: [item({ id: 'mug' })], customers: [customer({ id: 'ada' })] });
+  await backend.install(page);
+  await page.goto('/login');
+  await page.getByLabel('Customer').selectOption({ label: 'Ada Lovelace' });
+  await page.getByRole('button', { name: 'Log in' }).click();
+
   await page.goto('/items/mug');
   await page.getByRole('button', { name: 'Add to basket' }).click();
   await page.getByRole('link', { name: 'View basket' }).click();
-  await expect(page.getByRole('button', { name: 'Place order' })).toBeDisabled();
+  backend.failAll = true;
+  await page.getByRole('button', { name: 'Place order' }).click();
+  await expect(page.getByTestId('order-error')).toContainText('could not be placed');
+  await expect(page.locator('tbody tr')).toHaveCount(1);
 });

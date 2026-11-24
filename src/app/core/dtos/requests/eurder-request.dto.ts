@@ -1,13 +1,6 @@
+import { ItemGroupInterface } from '../../interfaces/item-group.interface';
+
 export interface EurderRequestDto {
   customerId: string;
-  itemGroups: [
-    {
-      itemId: string;
-      orderedAmount: number;
-    },
-    {
-      itemId: string;
-      orderedAmount: number;
-    },
-  ];
+  itemGroups: ItemGroupInterface[];
 }

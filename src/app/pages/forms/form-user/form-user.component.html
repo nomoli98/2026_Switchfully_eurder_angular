@@ -1,1 +1,131 @@
-<p>form-user works!</p>
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-text text-capitalize">{{ title() }}</span>
+  </div>
+</nav>
+
+<form class="form p-3" (submit)="onSubmit($event)" novalidate>
+
+  <div class="row">
+    <div class="col mb-3">
+      <label for="firstname" class="form-label">First name</label>
+      <div class="input-group has-validation">
+        <input id="firstname" type="text" class="form-control" placeholder="First name"
+               [formField]="form.firstname"
+               [class.is-invalid]="form.firstname().touched() && form.firstname().invalid()">
+        @if (form.firstname().touched() && form.firstname().invalid()) {
+          <div class="invalid-feedback">{{ form.firstname().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+    <div class="col mb-3">
+      <label for="lastname" class="form-label">Last name</label>
+      <div class="input-group has-validation">
+        <input id="lastname" type="text" class="form-control" placeholder="Last name"
+               [formField]="form.lastname"
+               [class.is-invalid]="form.lastname().touched() && form.lastname().invalid()">
+        @if (form.lastname().touched() && form.lastname().invalid()) {
+          <div class="invalid-feedback">{{ form.lastname().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <div class="input-group has-validation">
+      <span class="input-group-text">&#64;</span>
+      <input id="email" type="email" class="form-control" placeholder="name@example.com"
+             [formField]="form.email.complete"
+             [class.is-invalid]="form.email.complete().touched() && form.email.complete().invalid()">
+      @if (form.email.complete().touched() && form.email.complete().invalid()) {
+        <div class="invalid-feedback">{{ form.email.complete().errors()[0].message }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-4 col-md-3 mb-3">
+      <label for="callingCode" class="form-label">Code</label>
+      <div class="input-group has-validation">
+        <input id="callingCode" type="text" class="form-control" placeholder="+32"
+               [formField]="form.phoneNumber.countryCallingCode"
+               [class.is-invalid]="form.phoneNumber.countryCallingCode().touched() && form.phoneNumber.countryCallingCode().invalid()">
+        @if (form.phoneNumber.countryCallingCode().touched() && form.phoneNumber.countryCallingCode().invalid()) {
+          <div class="invalid-feedback">{{ form.phoneNumber.countryCallingCode().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+    <div class="col mb-3">
+      <label for="phone" class="form-label">Phone number</label>
+      <div class="input-group has-validation">
+        <input id="phone" type="tel" class="form-control" placeholder="470 12 34 56"
+               [formField]="form.phoneNumber.number"
+               [class.is-invalid]="form.phoneNumber.number().touched() && form.phoneNumber.number().invalid()">
+        @if (form.phoneNumber.number().touched() && form.phoneNumber.number().invalid()) {
+          <div class="invalid-feedback">{{ form.phoneNumber.number().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 mb-3">
+      <label for="street" class="form-label">Street</label>
+      <div class="input-group has-validation">
+        <input id="street" type="text" class="form-control" placeholder="Street name"
+               [formField]="form.address.streetName"
+               [class.is-invalid]="form.address.streetName().touched() && form.address.streetName().invalid()">
+        @if (form.address.streetName().touched() && form.address.streetName().invalid()) {
+          <div class="invalid-feedback">{{ form.address.streetName().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+    <div class="col-4 mb-3">
+      <label for="houseNumber" class="form-label">Number</label>
+      <div class="input-group has-validation">
+        <input id="houseNumber" type="text" class="form-control" placeholder="12B"
+               [formField]="form.address.houseNumber"
+               [class.is-invalid]="form.address.houseNumber().touched() && form.address.houseNumber().invalid()">
+        @if (form.address.houseNumber().touched() && form.address.houseNumber().invalid()) {
+          <div class="invalid-feedback">{{ form.address.houseNumber().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-4 mb-3">
+      <label for="postalCode" class="form-label">Postal code</label>
+      <div class="input-group has-validation">
+        <input id="postalCode" type="text" class="form-control" placeholder="1000"
+               [formField]="form.address.postalCode"
+               [class.is-invalid]="form.address.postalCode().touched() && form.address.postalCode().invalid()">
+        @if (form.address.postalCode().touched() && form.address.postalCode().invalid()) {
+          <div class="invalid-feedback">{{ form.address.postalCode().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+    <div class="col mb-3">
+      <label for="country" class="form-label">Country</label>
+      <div class="input-group has-validation">
+        <input id="country" type="text" class="form-control" placeholder="Country"
+               [formField]="form.address.country"
+               [class.is-invalid]="form.address.country().touched() && form.address.country().invalid()">
+        @if (form.address.country().touched() && form.address.country().invalid()) {
+          <div class="invalid-feedback">{{ form.address.country().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="d-grid gap-2">
+    @if (editable()) {
+      <button class="btn btn-success text-capitalize" type="submit" [disabled]="isLoading()">{{ methodName() }}</button>
+      <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+    } @else {
+      <button class="btn btn-success" type="button" [routerLink]="['/customers', user()?.id, 'edit']">Edit</button>
+      <button class="btn btn-secondary" type="reset" routerLink="/customers">Back</button>
+    }
+  </div>
+</form>

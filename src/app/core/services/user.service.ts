@@ -26,7 +26,7 @@ export class UserService {
     return this._http.get<UserRes[]>(this._url).pipe(map((users) => users.map(UserRestoEntity)));
   }
 
-  getOneItem(id: string) {
+  getOneUser(id: string) {
     return this._http.get<UserRes>(`${this._url}/${id}`).pipe(map(UserRestoEntity));
   }
 }

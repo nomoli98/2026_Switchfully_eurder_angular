@@ -17,7 +17,7 @@ export class UsersComponent {
 
   protected readonly _search = signal('');
 
-  protected readonly _filteredItems = computed(() => {
+  protected readonly _filteredUsers = computed(() => {
     const term = this._search().trim().toLowerCase();
     return term
       ? this._users().filter((u) => u.lastname.toLowerCase().includes(term))

@@ -15,8 +15,8 @@
       @for (user of _users(); track user.id) {
         <tr>
           <th scope="row">{{ user.id }}</th>
-          <td>{{ user.lastname }}</td>
           <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
           <td>
             <div class="btn-group" role="group">
               <button class="btn btn-secondary" routerLink="/customers/{{user.id}}">View</button>

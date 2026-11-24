@@ -1,0 +1,25 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-brand">Basket</span>
+  </div>
+</nav>
+
+<div class="container-fluid p-3 pb-5 mb-5">
+  @if (_basket().length === 0) {
+    <div class="card text-center">
+      <div class="card-body py-5">
+        <h1 class="h4 card-title">Your basket is empty</h1>
+        <p class="card-text text-body-secondary">Browse the catalogue to add items to an order.</p>
+        <a class="btn btn-success" routerLink="/items">Browse items</a>
+      </div>
+    </div>
+  } @else {
+    <app-basket-table [basket]="_basket()" />
+
+    <div class="d-grid mt-3">
+      <!-- Placeholder (story ORBA2): placing the order comes with ORBA3 -->
+      <button type="button" class="btn btn-success btn-lg text-uppercase" disabled
+              title="Placing orders is not available yet">Place order</button>
+    </div>
+  }
+</div>

@@ -1,0 +1,14 @@
+@if (item(); as item) {
+  <td><a class="text-capitalize" [routerLink]="['/items', item.id]">{{ item.name }}</a></td>
+  <td>
+    <input type="number" min="1" step="1" class="form-control" [attr.aria-label]="'Amount of ' + item.name"
+           [value]="productAmount()" (change)="onChangeAmount($event)">
+  </td>
+  <td>{{ item.price * productAmount() | currency: 'EUR' }}</td>
+  <td class="text-end">
+    <button type="button" class="btn btn-danger btn-sm" [attr.aria-label]="'Remove ' + item.name"
+            (click)="removed.emit()">Remove</button>
+  </td>
+} @else {
+  <td colspan="4"><span class="placeholder col-4"></span></td>
+}

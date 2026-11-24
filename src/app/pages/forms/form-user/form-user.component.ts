@@ -44,8 +44,9 @@ export class FormUserComponent {
     email(u.email.complete, { message: 'Please enter a valid email address.' });
 
     required(u.phoneNumber.countryCallingCode, { message: 'Required.' });
-    pattern(u.phoneNumber.countryCallingCode, /^\+?\d{1,4}$/, {
-      message: 'Invalid code (e.g. +32).',
+    // The "+" is shown in front of the field, so only digits are typed here
+    pattern(u.phoneNumber.countryCallingCode, /^\d{1,4}$/, {
+      message: 'Invalid code (e.g. 32).',
     });
     required(u.phoneNumber.number, { message: 'Please enter a phone number.' });
     pattern(u.phoneNumber.number, /^[\d\s\/.-]{6,20}$/, {
@@ -94,8 +95,11 @@ export class FormUserComponent {
   private toPayload(value: UserReq): UserReq {
     const complete = value.email.complete.trim();
     const at = complete.lastIndexOf('@');
+    const code = value.phoneNumber.countryCallingCode.trim().replace(/^\+/, '');
     return {
       ...value,
+      // The backend stores the calling code with its "+"
+      phoneNumber: { ...value.phoneNumber, countryCallingCode: code ? `+${code}` : '' },
       email: {
         complete,
         localPart: at > -1 ? complete.slice(0, at) : complete,
@@ -110,7 +114,11 @@ export class FormUserComponent {
       lastname: user.lastname,
       email: { ...user.email },
       address: { ...user.address },
-      phoneNumber: { ...user.phoneNumber },
+      phoneNumber: {
+        ...user.phoneNumber,
+        // Shown without "+" because the field already has a "+" label
+        countryCallingCode: user.phoneNumber.countryCallingCode.replace(/^\+/, ''),
+      },
     };
   }
 }

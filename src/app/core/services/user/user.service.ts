@@ -1,13 +1,13 @@
 import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UserReq } from '../dtos/requests/user-request.dto';
-import { UserRes } from '../dtos/responses/user-response.dto';
+import { UserReq } from '../../dtos/requests/user-request.dto';
+import { UserRes } from '../../dtos/responses/user-response.dto';
 import { map, Observable } from 'rxjs';
-import { UserRestoEntity } from '../mappers/responses/user-response.mapper';
-import { ItemInterface } from '../interfaces/item.interface';
-import { UserInterface } from '../interfaces/user.interface';
-import { ItemAPIRes } from '../dtos/responses/item-response.dto';
-import { ItemRestoEntity } from '../mappers/responses/item-response.mapper';
+import { UserRestoEntity } from '../../mappers/responses/user-response.mapper';
+import { ItemInterface } from '../../interfaces/item.interface';
+import { UserInterface } from '../../interfaces/user.interface';
+import { ItemAPIRes } from '../../dtos/responses/item-response.dto';
+import { ItemRestoEntity } from '../../mappers/responses/item-response.mapper';
 
 @Service()
 export class UserService {

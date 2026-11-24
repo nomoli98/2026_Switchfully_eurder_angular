@@ -1,21 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FooterComponent } from './footer.component';
+import { q, text } from '../../../testing/fixtures';
 
 describe('FooterComponent', () => {
-  let component: FooterComponent;
-  let fixture: ComponentFixture<FooterComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FooterComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(FooterComponent);
-    component = fixture.componentInstance;
+  it('shows the brand linking home', async () => {
+    TestBed.configureTestingModule({ imports: [FooterComponent], providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(FooterComponent);
     await fixture.whenStable();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    const brand = q<HTMLAnchorElement>(fixture.nativeElement, '.navbar-brand');
+    expect(text(brand)).toBe('Örder');
+    expect(brand.getAttribute('href')).toBe('/');
   });
 });

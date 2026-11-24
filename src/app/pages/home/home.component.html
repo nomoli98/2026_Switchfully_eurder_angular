@@ -1,0 +1,92 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-brand">Home</span>
+  </div>
+</nav>
+
+<div class="container-fluid p-3 pb-5 mb-5">
+  <section class="p-4 mb-3 bg-body-tertiary border rounded-3 d-flex flex-column flex-md-row align-items-md-center gap-3">
+    <img src="/images/icons/order-icon.png" alt="" width="64" height="64" class="logo">
+    <div class="flex-grow-1">
+      <h1 class="h3 mb-1">Welcome to Örder</h1>
+      <p class="text-body-secondary mb-0">Manage your items and customers in one place.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-success" routerLink="/items">Browse items</a>
+      <a class="btn btn-outline-secondary" routerLink="/customers">View customers</a>
+    </div>
+  </section>
+
+  @if (hasError()) {
+    <div class="alert alert-warning" role="alert" data-testid="home-error">
+      Could not reach the server. Some numbers may be missing.
+    </div>
+  }
+
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-body-secondary small">Items</div>
+          <div class="fs-2 fw-semibold" data-testid="stat-items">
+            @if (items.isLoading()) { <span class="placeholder col-4"></span> } @else { {{ itemCount() ?? '–' }} }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-body-secondary small">Low on stock</div>
+          <div class="fs-2 fw-semibold" data-testid="stat-low-stock" [class.text-danger]="(lowStockCount() ?? 0) > 0">
+            @if (items.isLoading()) { <span class="placeholder col-4"></span> } @else { {{ lowStockCount() ?? '–' }} }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-body-secondary small">Customers</div>
+          <div class="fs-2 fw-semibold" data-testid="stat-customers">
+            @if (users.isLoading()) { <span class="placeholder col-4"></span> } @else { {{ customerCount() ?? '–' }} }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="card h-100">
+        <div class="card-header">Needs restocking</div>
+        <ul class="list-group list-group-flush">
+          @for (item of restockList(); track item.id) {
+            <li class="list-group-item d-flex justify-content-between align-items-center gap-2" data-testid="restock-row">
+              <a class="text-capitalize text-truncate" [routerLink]="['/items', item.id]">{{ item.name }}</a>
+              <span class="d-flex align-items-center gap-2">
+                <span class="badge text-bg-danger">{{ item.amountOfStock }} left</span>
+                <a class="btn btn-sm btn-outline-success" [routerLink]="['/items', item.id, 'update']">Restock</a>
+              </span>
+            </li>
+          } @empty {
+            <li class="list-group-item text-body-secondary">
+              @if (loading()) { Loading… } @else { Nothing is low on stock. }
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="card h-100">
+        <div class="card-header">Quick actions</div>
+        <div class="list-group list-group-flush">
+          <a class="list-group-item list-group-item-action" routerLink="/items/new">Create an item</a>
+          <a class="list-group-item list-group-item-action" routerLink="/customers/new">Create a customer</a>
+          <a class="list-group-item list-group-item-action" routerLink="/items">Search items</a>
+          <a class="list-group-item list-group-item-action" routerLink="/customers">Search customers</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

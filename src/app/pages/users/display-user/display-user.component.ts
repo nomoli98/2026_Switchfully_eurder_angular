@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { FormUserComponent } from '../../forms/form-user/form-user.component';
-import { UserService } from '../../../core/services/user.service';
+import { UserService } from '../../../core/services/user/user.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 

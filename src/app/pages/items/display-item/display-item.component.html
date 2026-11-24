@@ -1,1 +1,19 @@
 <app-form-item [editable]="false" [item]="item()"/>
+
+@if (item()) {
+  <section class="px-3 pb-5 mb-5" aria-label="Add to basket">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <div class="input-group" style="max-width: 18rem">
+        <input id="basketAmount" type="number" min="1" step="1" class="form-control" aria-label="Amount"
+               [value]="amount()" (input)="onAmountInput($event)"
+               [class.is-invalid]="!(amount() >= 1 && amount() % 1 === 0)">
+        <button type="button" class="btn btn-warning text-uppercase fw-semibold" (click)="addToBasket()"
+                [disabled]="!(amount() >= 1 && amount() % 1 === 0)">Add to basket</button>
+      </div>
+      <a class="btn btn-outline-warning text-uppercase fw-semibold ms-auto" routerLink="/basket">View basket</a>
+    </div>
+    <p class="text-success small mt-2 mb-0" role="status" aria-live="polite" data-testid="basket-confirmation">
+      {{ confirmation() }}
+    </p>
+  </section>
+}

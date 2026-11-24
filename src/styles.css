@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* The logo png has a solid white background: blend it into the navbar / card colour in both themes */
+img.logo,
+.navbar-brand img {
+  mix-blend-mode: multiply;
+}
+[data-bs-theme='dark'] img.logo,
+[data-bs-theme='dark'] .navbar-brand img {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}

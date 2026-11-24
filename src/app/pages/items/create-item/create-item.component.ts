@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormItemComponent } from '../../forms/form-item/form-item.component';
 import { ItemInterface } from '../../../core/interfaces/item.interface';
-import { ItemService } from '../../../core/services/item.service';
-import { Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { ItemService } from '../../../core/services/item/item.service';
 
 @Component({
   imports: [FormItemComponent],
@@ -13,8 +11,6 @@ import { Router } from '@angular/router';
 export class CreateItemComponent {
   private readonly itemService = inject(ItemService);
 
-  private readonly router = inject(Router);
-
-  protected readonly createItem = (item: ItemInterface) =>
-    this.itemService.createItem(item).pipe(tap(() => this.router.navigate(['/items'])));
+  // Navigation after saving is handled by the form
+  protected readonly createItem = (item: ItemInterface) => this.itemService.createItem(item);
 }

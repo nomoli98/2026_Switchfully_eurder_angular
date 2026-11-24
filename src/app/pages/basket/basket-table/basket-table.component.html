@@ -1,0 +1,30 @@
+<div class="border rounded-3 overflow-auto">
+  <table class="table table-striped align-middle mb-0">
+    <thead>
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col" style="width: 8rem">Amount</th>
+      <th scope="col">Price</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (group of basket(); track group.itemId) {
+        <tr app-basket-table-rows
+            [itemId]="group.itemId"
+            [productAmount]="group.orderedAmount"
+            (changedAmount)="updateAmount(group.itemId, $event)"
+            (removed)="remove(group.itemId)"></tr>
+      }
+    </tbody>
+    <tfoot>
+    <tr>
+      <th scope="row" colspan="2" class="text-end">Total</th>
+      <td class="fw-bold" data-testid="basket-total">
+        @if (total() !== null) { {{ total() | currency: 'EUR' }} } @else { <span class="placeholder col-6"></span> }
+      </td>
+      <td></td>
+    </tr>
+    </tfoot>
+  </table>
+</div>

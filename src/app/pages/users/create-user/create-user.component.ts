@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormUserComponent } from '../../forms/form-user/form-user.component';
 import { UserReq } from '../../../core/dtos/requests/user-request.dto';
-import { UserService } from '../../../core/services/user.service';
+import { UserService } from '../../../core/services/user/user.service';
 
 @Component({
   imports: [FormUserComponent],

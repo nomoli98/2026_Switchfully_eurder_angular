@@ -1,21 +1,27 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 import { CreateUserComponent } from './create-user.component';
+import { UserService } from '../../../core/services/user/user.service';
+import { FormUserComponent } from '../../forms/form-user/form-user.component';
+import { makeUser } from '../../../../testing/fixtures';
+import { UserReq } from '../../../core/dtos/requests/user-request.dto';
 
 describe('CreateUserComponent', () => {
-  let component: CreateUserComponent;
-  let fixture: ComponentFixture<CreateUserComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  it('renders an editable create form wired to UserService.createUser', async () => {
+    const createUser = vi.fn(() => of(makeUser()));
+    TestBed.configureTestingModule({
       imports: [CreateUserComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(CreateUserComponent);
-    component = fixture.componentInstance;
+      providers: [provideRouter([]), { provide: UserService, useValue: { createUser } }],
+    });
+    const fixture = TestBed.createComponent(CreateUserComponent);
     await fixture.whenStable();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    const form = fixture.debugElement.query((d) => d.componentInstance instanceof FormUserComponent)
+      .componentInstance as FormUserComponent;
+    expect(form.editable()).toBe(true);
+    expect(form.methodName()).toBe('create');
+    const req = { firstname: 'x' } as UserReq;
+    form.method()!(req).subscribe();
+    expect(createUser).toHaveBeenCalledWith(req);
   });
 });

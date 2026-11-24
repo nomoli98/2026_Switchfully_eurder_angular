@@ -1,12 +1,13 @@
 import { Component, computed, inject, linkedSignal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { ItemsCardComponent } from './items-card/items-card.component';
-import { ItemService } from '../../core/services/item.service';
+import { ItemService } from '../../core/services/item/item.service';
 
 const PAGE_SIZE = 8;
 
 @Component({
-  imports: [ItemsCardComponent],
+  imports: [ItemsCardComponent, RouterLink],
   selector: 'app-items',
   templateUrl: './items.component.html',
 })

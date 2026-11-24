@@ -1,9 +1,9 @@
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand">Items</a>
-    <form class="d-flex" role="search" (submit)="$event.preventDefault()">
+    <form class="d-flex gap-2" role="search" (submit)="$event.preventDefault()">
       <input
-        class="form-control me-2"
+        class="form-control"
         type="search"
         placeholder="Search"
         aria-label="Search"
@@ -11,6 +11,7 @@
         (input)="_search.set($any($event.target).value)"
       />
       <button class="btn btn-outline-success" type="submit">Search</button>
+      <a class="btn btn-success text-nowrap" routerLink="/items/new">Add Item</a>
     </form>
   </div>
 </nav>

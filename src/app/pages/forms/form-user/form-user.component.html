@@ -49,7 +49,7 @@
       <label for="callingCode" class="form-label">Code</label>
       <div class="input-group has-validation">
         <span class="input-group-text">+</span>
-        <input id="callingCode" type="text" class="form-control" placeholder="+32"
+        <input id="callingCode" type="text" inputmode="numeric" class="form-control" placeholder="32"
                [formField]="form.phoneNumber.countryCallingCode"
                [class.is-invalid]="form.phoneNumber.countryCallingCode().touched() && form.phoneNumber.countryCallingCode().invalid()">
         @if (form.phoneNumber.countryCallingCode().touched() && form.phoneNumber.countryCallingCode().invalid()) {

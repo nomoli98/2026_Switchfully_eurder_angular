@@ -1,10 +1,10 @@
 import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { ItemInterface } from '../interfaces/item.interface';
-import { ItemRestoEntity } from '../mappers/responses/item-response.mapper';
-import { toItemReq } from '../mappers/requests/item-request.mapper';
-import { ItemAPIRes } from '../dtos/responses/item-response.dto';
+import { ItemInterface } from '../../interfaces/item.interface';
+import { ItemRestoEntity } from '../../mappers/responses/item-response.mapper';
+import { toItemReq } from '../../mappers/requests/item-request.mapper';
+import { ItemAPIRes } from '../../dtos/responses/item-response.dto';
 
 @Service()
 export class ItemService {

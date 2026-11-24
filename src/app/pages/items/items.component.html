@@ -1,0 +1,44 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand">Items</a>
+    <form class="d-flex" role="search" (submit)="$event.preventDefault()">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+        [value]="_search()"
+        (input)="_search.set($any($event.target).value)"
+      />
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<div class="card-group gap-3 p-3">
+  @for (i of _pagedItems(); track i.id) {
+    <app-items-card [item]="i" />
+  } @empty {
+    <p>No items match "{{ _search() }}".</p>
+  }
+</div>
+
+@if (_totalPages() > 1) {
+  <nav aria-label="Items pages">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="_page() === 1">
+        <button class="page-link" (click)="goTo(_page() - 1)">Previous</button>
+      </li>
+
+      @for (p of _pages(); track p) {
+        <li class="page-item" [class.active]="p === _page()">
+          <button class="page-link" (click)="goTo(p)">{{ p }}</button>
+        </li>
+      }
+
+      <li class="page-item" [class.disabled]="_page() === _totalPages()">
+        <button class="page-link" (click)="goTo(_page() + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+}

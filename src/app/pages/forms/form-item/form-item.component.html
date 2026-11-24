@@ -1,0 +1,71 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <span class="navbar-text text-capitalize">{{ methodName() }} item {{ item()?.id }}</span>
+  </div>
+</nav>
+
+<form class="form p-3" (submit)="onSubmit($event)" novalidate>
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <div class="input-group has-validation">
+      <input id="name" type="text" class="form-control" placeholder="Name"
+             [formField]="form.name" [class.is-invalid]="form.name().touched() && form.name().invalid()">
+      @if (form.name().touched() && form.name().invalid()) {
+        <div class="invalid-feedback">{{ form.name().errors()[0].message }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <div class="input-group has-validation">
+      <textarea id="description" class="form-control"
+                [formField]="form.description"
+                [class.is-invalid]="form.description().touched() && form.description().invalid()"></textarea>
+      @if (form.description().touched() && form.description().invalid()) {
+        <div class="invalid-feedback">{{ form.description().errors()[0].message }}</div>
+      }
+      <div class="form-text w-100 d-flex justify-content-end gap-2" [class.text-danger]="descTooLong()">
+        @if (descTooLong()) {
+          <span>Description cannot be longer than 255 characters</span>
+        }
+        <span>{{ textCount() }}/255</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col mb-3">
+      <label for="price" class="form-label">Price</label>
+      <div class="input-group has-validation">
+        <span class="input-group-text">€</span>
+        <input id="price" type="number" class="form-control" step="0.01"
+               [formField]="form.price" [class.is-invalid]="form.price().touched() && form.price().invalid()">
+        @if (form.price().touched() && form.price().invalid()) {
+          <div class="invalid-feedback">{{ form.price().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+    <div class="col mb-3">
+      <label for="stock" class="form-label">Stock</label>
+      <div class="input-group has-validation">
+        <input id="stock" type="number" class="form-control" step="1"
+               [formField]="form.amountOfStock" [class.is-invalid]="form.amountOfStock().touched() && form.amountOfStock().invalid()">
+        @if (form.amountOfStock().touched() && form.amountOfStock().invalid()) {
+          <div class="invalid-feedback">{{ form.amountOfStock().errors()[0].message }}</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="d-grid gap-2">
+    @if (editable()) {
+      <button class="btn btn-success text-capitalize" type="submit" [disabled]="isLoading()">{{ methodName() }}</button>
+      <button class="btn btn-secondary" type="reset" (click)="resetErrors()">Cancel</button>
+    } @else {
+      <button class="btn btn-success" type="button" [routerLink]="['/items', item()?.id, 'update']">Edit</button>
+      <button class="btn btn-secondary" type="reset" routerLink="/items">Back</button>
+    }
+  </div>
+</form>

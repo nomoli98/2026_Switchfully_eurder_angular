@@ -1,0 +1,12 @@
+@if (item.isLoading()) {
+  <p class="p-3">Loading…</p>
+} @else if (item.error()) {
+  <p class="p-3 text-danger">Could not load this item.</p>
+} @else {
+  <app-form-item
+    [editable]="true"
+    [method]="updateItem"
+    methodName="update"
+    [item]="item.value()"
+  />
+}
